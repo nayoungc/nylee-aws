@@ -1,0 +1,28 @@
+
+  {
+    "app_title": "LMS 플랫폼",
+    "app_logo_alt": "LMS 로고",
+    "loading": "로딩 중...",
+    "search_placeholder": "검색...",
+    "search_aria_label": "검색",
+    "home": "홈",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "profile": "프로필",
+    "settings": "설정",
+    "language": "언어",
+    "help_title": "도움말 및 리소스",
+    "learn_more": "더 알아보기",
+    "dark_mode": "다크 모드",
+    "light_mode": "라이트 모드",
+    "toggle_theme": "테마 전환",
+    "next_page": "다음 페이지",
+    "previous_page": "이전 페이지",
+    "page_label": "페이지 {{pageNumber}}",
+    "table_view": "테이블 보기",
+    "card_view": "카드 보기",
+    "refresh": "새로고침",
+    "add_new": "새로 추가",
+    "edit": "편집",
+    "delete": "삭제"
+  }
