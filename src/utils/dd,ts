@@ -1,0 +1,1024 @@
+1. 기본 레이아웃 구조
+
+2. 각 사용자 모드별 레이아웃
+src/components/layout/AdminLayout.tsx
+import React, { ReactNode } from 'react';
+import BaseLayout from './BaseLayout';
+import { SideNavigation, Breadcrumbs } from '@cloudscape-design/components';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
+interface AdminLayoutProps {
+  children: ReactNode;
+  tools?: ReactNode;
+  activeHref?: string;
+  breadcrumbItems?: Array<{ text: string; href?: string }>;
+}
+
+const AdminLayout: React.FC<AdminLayoutProps> = ({
+  children,
+  tools,
+  activeHref,
+  breadcrumbItems = []
+}) => {
+  const { t } = useTranslation(['navigation', 'common']);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 활성 경로 설정
+  const currentHref = activeHref || location.pathname;
+  
+  // 관리자 내비게이션 항목
+  const navItems = [
+    { 
+      type: 'link' as const, 
+      text: t('navigation:admin.dashboard'), 
+      href: '/admin/dashboard'
+    },
+    { 
+      type: 'section-group' as const,
+      title: t('navigation:admin.course_management'),
+      items: [
+        { type: 'link' as const, text: t('navigation:admin.course_catalog'), href: '/admin/catalog' },
+        { type: 'link' as const, text: t('navigation:admin.course_scheduling'), href: '/admin/scheduling' }
+      ]
+    },
+    { 
+      type: 'section-group' as const,
+      title: t('navigation:admin.user_management'),
+      items: [
+        { type: 'link' as const, text: t('navigation:admin.instructors'), href: '/admin/instructors' },
+        { type: 'link' as const, text: t('navigation:admin.students'), href: '/admin/students' }
+      ]
+    },
+    { 
+      type: 'section-group' as const,
+      title: t('navigation:admin.assessment'),
+      items: [
+        { type: 'link' as const, text: t('navigation:admin.quizzes'), href: '/admin/quizzes' },
+        { type: 'link' as const, text: t('navigation:admin.surveys'), href: '/admin/surveys' }
+      ]
+    },
+    { 
+      type: 'section-group' as const,
+      title: t('navigation:admin.system'),
+      items: [
+        { type: 'link' as const, text: t('navigation:admin.settings'), href: '/admin/settings' },
+        { type: 'link' as const, text: t('navigation:admin.logs'), href: '/admin/logs' }
+      ]
+    }
+  ];
+
+  const navigation = (
+    <SideNavigation
+      activeHref={currentHref}
+      items={navItems}
+      header={{ text: t('navigation:admin.title') }}
+      onFollow={event => {
+        event.preventDefault();
+        navigate(event.detail.href);
+      }}
+    />
+  );
+
+  // 빵부스러기 생성
+  const breadcrumbs = breadcrumbItems.length > 0 ? (
+    <Breadcrumbs
+      items={[
+        { text: t('common:home'), href: '/' },
+        { text: t('navigation:admin.title'), href: '/admin' },
+        ...breadcrumbItems
+      ]}
+    />
+  ) : undefined;
+
+  return (
+    <BaseLayout 
+      navigation={navigation}
+      tools={tools}
+      breadcrumbs={breadcrumbs}
+      activeHref={currentHref}
+    >
+      {children}
+    </BaseLayout>
+  );
+};
+
+export default AdminLayout;
+src/components/layout/InstructorLayout.tsx
+import React, { ReactNode } from 'react';
+import BaseLayout from './BaseLayout';
+import { SideNavigation, Breadcrumbs } from '@cloudscape-design/components';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
+interface InstructorLayoutProps {
+  children: ReactNode;
+  tools?: ReactNode;
+  activeHref?: string;
+  breadcrumbItems?: Array<{ text: string; href?: string }>;
+}
+
+const InstructorLayout: React.FC<InstructorLayoutProps> = ({
+  children,
+  tools,
+  activeHref,
+  breadcrumbItems = []
+}) => {
+  const { t } = useTranslation(['navigation', 'common']);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 활성 경로 설정
+  const currentHref = activeHref || location.pathname;
+  
+  // 강사 내비게이션 항목
+  const navItems = [
+    { 
+      type: 'link' as const, 
+      text: t('navigation:instructor.dashboard'), 
+      href: '/instructor/dashboard'
+    },
+    { 
+      type: 'section-group' as const,
+      title: t('navigation:instructor.courses'),
+      items: [
+        { type: 'link' as const, text: t('navigation:instructor.my_courses'), href: '/instructor/courses' },
+        { type: 'link' as const, text: t('navigation:instructor.calendar'), href: '/instructor/calendar' }
+      ]
+    },
+    { 
+      type: 'section-group' as const,
+      title: t('navigation:instructor.content'),
+      items: [
+        { type: 'link' as const, text: t('navigation:instructor.materials'), href: '/instructor/materials' },
+        { type: 'link' as const, text: t('navigation:instructor.assignments'), href: '/instructor/assignments' }
+      ]
+    },
+    { 
+      type: 'section-group' as const,
+      title: t('navigation:instructor.assessment'),
+      items: [
+        { type: 'link' as const, text: t('navigation:instructor.quizzes'), href: '/instructor/quizzes' },
+        { type: 'link' as const, text: t('navigation:instructor.surveys'), href: '/instructor/surveys' }
+      ]
+    },
+    { 
+      type: 'section-group' as const,
+      title: t('navigation:instructor.students'),
+      items: [
+        { type: 'link' as const, text: t('navigation:instructor.attendance'), href: '/instructor/attendance' },
+        { type: 'link' as const, text: t('navigation:instructor.grades'), href: '/instructor/grades' }
+      ]
+    }
+  ];
+
+  const navigation = (
+    <SideNavigation
+      activeHref={currentHref}
+      items={navItems}
+      header={{ text: t('navigation:instructor.title') }}
+      onFollow={event => {
+        event.preventDefault();
+        navigate(event.detail.href);
+      }}
+    />
+  );
+
+  // 빵부스러기 생성
+  const breadcrumbs = breadcrumbItems.length > 0 ? (
+    <Breadcrumbs
+      items={[
+        { text: t('common:home'), href: '/' },
+        { text: t('navigation:instructor.title'), href: '/instructor' },
+        ...breadcrumbItems
+      ]}
+    />
+  ) : undefined;
+
+  return (
+    <BaseLayout 
+      navigation={navigation}
+      tools={tools}
+      breadcrumbs={breadcrumbs}
+      activeHref={currentHref}
+    >
+      {children}
+    </BaseLayout>
+  );
+};
+
+export default InstructorLayout;
+src/components/layout/PublicLayout.tsx
+import React, { ReactNode } from 'react';
+import BaseLayout from './BaseLayout';
+import { SideNavigation, Breadcrumbs } from '@cloudscape-design/components';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
+interface PublicLayoutProps {
+  children: ReactNode;
+  tools?: ReactNode;
+  activeHref?: string;
+  breadcrumbItems?: Array<{ text: string; href?: string }>;
+  hideSidebar?: boolean;
+}
+
+const PublicLayout: React.FC<PublicLayoutProps> = ({
+  children,
+  tools,
+  activeHref,
+  breadcrumbItems = [],
+  hideSidebar = false
+}) => {
+  const { t } = useTranslation(['navigation', 'common']);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 활성 경로 설정
+  const currentHref = activeHref || location.pathname;
+  
+  // 퍼블릭 내비게이션 항목
+  const navItems = [
+    { type: 'link' as const, text: t('navigation:public.home'), href: '/' },
+    { type: 'link' as const, text: t('navigation:public.courses'), href: '/courses' },
+    { type: 'link' as const, text: t('navigation:public.about'), href: '/about' },
+    { type: 'link' as const, text: t('navigation:public.contact'), href: '/contact' }
+  ];
+
+  const navigation = !hideSidebar ? (
+    <SideNavigation
+      activeHref={currentHref}
+      items={navItems}
+      header={{ text: t('navigation:public.menu') }}
+      onFollow={event => {
+        event.preventDefault();
+        navigate(event.detail.href);
+      }}
+    />
+  ) : undefined;
+
+  // 빵부스러기 생성
+  const breadcrumbs = breadcrumbItems.length > 0 ? (
+    <Breadcrumbs
+      items={[
+        { text: t('common:home'), href: '/' },
+        ...breadcrumbItems
+      ]}
+    />
+  ) : undefined;
+
+  return (
+    <BaseLayout 
+      navigation={navigation}
+      tools={tools}
+      breadcrumbs={breadcrumbs}
+      activeHref={currentHref}
+    >
+      {children}
+    </BaseLayout>
+  );
+};
+
+export default PublicLayout;
+3. 툴바 컴포넌트
+src/components/toolbar/ContentToolbar.tsx
+import React, { useState } from 'react';
+import { 
+  SpaceBetween, 
+  Button, 
+  SegmentedControl, 
+  TextFilter,
+  HelpPanel,
+  Box
+} from '@cloudscape-design/components';
+import { useTranslation } from 'react-i18next';
+
+export interface ContentToolbarProps {
+  onFilterChange: (value: string) => void;
+  onViewChange?: (view: 'table' | 'cards') => void;
+  onRefresh?: () => void;
+  onAdd?: () => void;
+  filterValue: string;
+  showViewSelector?: boolean;
+  helpPanelContent?: React.ReactNode;
+}
+
+export const ContentToolbar: React.FC<ContentToolbarProps> = ({
+  onFilterChange,
+  onViewChange,
+  onRefresh,
+  onAdd,
+  filterValue,
+  showViewSelector = true,
+  helpPanelContent
+}) => {
+  const { t } = useTranslation();
+  const [viewType, setViewType] = useState<'table' | 'cards'>('table');
+
+  return (
+    <SpaceBetween size="m">
+      {helpPanelContent && (
+        <HelpPanel
+          header={<h2>{t('common:help_title')}</h2>}
+          footer={
+            <Box variant="p">
+              <a href="#">{t('common:learn_more')}</a>
+            </Box>
+          }
+        >
+          {helpPanelContent}
+        </HelpPanel>
+      )}
+      
+      <SpaceBetween size="m" direction="horizontal">
+        <TextFilter
+          filteringText={filterValue}
+          filteringPlaceholder={t('common:search_placeholder')}
+          filteringAriaLabel={t('common:search_aria_label')}
+          onChange={({ detail }) => onFilterChange(detail.filteringText)}
+        />
+        
+        {showViewSelector && onViewChange && (
+          <SegmentedControl
+            selectedId={viewType}
+            onChange={({ detail }) => {
+              const newView = detail.selectedId as 'table' | 'cards';
+              setViewType(newView);
+              onViewChange(newView);
+            }}
+            options={[
+              { id: 'table', text: t('common:table_view') },
+              { id: 'cards', text: t('common:card_view') }
+            ]}
+          />
+        )}
+        
+        {onRefresh && (
+          <Button iconName="refresh" onClick={onRefresh}>
+            {t('common:refresh')}
+          </Button>
+        )}
+        
+        {onAdd && (
+          <Button variant="primary" iconName="add-plus" onClick={onAdd}>
+            {t('common:add_new')}
+          </Button>
+        )}
+      </SpaceBetween>
+    </SpaceBetween>
+  );
+};
+
+export default ContentToolbar;
+4. 페이지 예시
+src/pages/admin/CourseCatalogPage.tsx
+import React, { useState, useEffect } from 'react';
+import AdminLayout from '../../components/layout/AdminLayout';
+import ContentToolbar from '../../components/toolbar/ContentToolbar';
+import { 
+  Table, 
+  Box, 
+  Pagination, 
+  Cards,
+  Header,
+  SpaceBetween,
+  Button,
+  Badge
+} from '@cloudscape-design/components';
+import { useTranslation } from 'react-i18next';
+import { useCourseCatalog } from '../../hooks/useCourseCatalog';
+
+const CourseCatalogPage: React.FC = () => {
+  const { t } = useTranslation(['admin', 'common']);
+  const { courses, loading, fetchCourses } = useCourseCatalog();
+  const [filterValue, setFilterValue] = useState('');
+  const [viewType, setViewType] = useState<'table' | 'cards'>('table');
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  
+  // 필터링 처리
+  const filteredCourses = filterValue 
+    ? courses.filter(course => 
+        course.courseName.toLowerCase().includes(filterValue.toLowerCase())
+      )
+    : courses;
+    
+  // 테이블 컬럼 정의
+  const columnDefinitions = [
+    { id: 'catalogId', header: 'ID', cell: item => item.catalogId },
+    { id: 'courseName', header: t('admin:catalog.course_name'), cell: item => item.courseName },
+    { id: 'courseCode', header: t('admin:catalog.course_code'), cell: item => item.courseCode },
+    { id: 'level', header: t('admin:catalog.level'), cell: item => item.level },
+    { 
+      id: 'status', 
+      header: t('admin:catalog.status'), 
+      cell: item => (
+        <Badge color={item.status === 'ACTIVE' ? 'green' : 'grey'}>
+          {item.status === 'ACTIVE' ? t('admin:status.active') : t('admin:status.eol')}
+        </Badge>
+      )
+    },
+    { 
+      id: 'actions', 
+      header: t('admin:actions'), 
+      cell: item => (
+        <SpaceBetween size="xs" direction="horizontal">
+          <Button iconName="edit">
+            {t('common:edit')}
+          </Button>
+          <Button iconName="remove" variant="link">
+            {t('common:delete')}
+          </Button>
+        </SpaceBetween>
+      )
+    }
+  ];
+  
+  // 카드 정의
+  const cardDefinition = {
+    header: item => (
+      <div>
+        <h4>{item.courseName}</h4>
+        <span>{item.courseCode}</span>
+      </div>
+    ),
+    sections: [
+      {
+        id: "description",
+        header: t('admin:catalog.description'),
+        content: item => item.description || t('admin:catalog.no_description')
+      },
+      {
+        id: "details",
+        header: t('admin:catalog.details'),
+        content: item => (
+          <SpaceBetween size="m">
+            <div><strong>{t('admin:catalog.level')}:</strong> {item.level}</div>
+            <div><strong>{t('admin:catalog.duration')}:</strong> {item.duration}</div>
+            <div>
+              <strong>{t('admin:catalog.status')}:</strong>
+              <Badge color={item.status === 'ACTIVE' ? 'green' : 'grey'}>
+                {item.status === 'ACTIVE' ? t('admin:status.active') : t('admin:status.eol')}
+              </Badge>
+            </div>
+          </SpaceBetween>
+        )
+      }
+    ]
+  };
+  
+  // 툴바 헬프 패널 내용
+  const helpContent = (
+    <div>
+      <p>{t('admin:catalog.help_text')}</p>
+      <h4>{t('admin:catalog.help_tips_title')}</h4>
+      <ul>
+        <li>{t('admin:catalog.help_tip_1')}</li>
+        <li>{t('admin:catalog.help_tip_2')}</li>
+      </ul>
+    </div>
+  );
+  
+  const breadcrumbItems = [
+    { text: t('admin:catalog.title'), href: '/admin/catalog' }
+  ];
+  
+  return (
+    <AdminLayout
+      activeHref="/admin/catalog"
+      breadcrumbItems={breadcrumbItems}
+      tools={
+        <ContentToolbar
+          filterValue={filterValue}
+          onFilterChange={setFilterValue}
+          onViewChange={setViewType}
+          onRefresh={fetchCourses}
+          onAdd={() => console.log('Add new course')}
+          showViewSelector={true}
+          helpPanelContent={helpContent}
+        />
+      }
+    >
+      <SpaceBetween size="l">
+        <Header
+          variant="h1"
+          actions={
+            <Button variant="primary" iconName="add-plus">
+              {t('admin:catalog.create_course')}
+            </Button>
+          }
+        >
+          {t('admin:catalog.title')}
+        </Header>
+        
+        {viewType === 'table' ? (
+          <Table
+            loading={loading}
+            items={filteredCourses}
+            columnDefinitions={columnDefinitions}
+            loadingText={t('admin:catalog.loading')}
+            selectionType="multi"
+            onSelectionChange={({ detail }) => 
+              setSelectedItems(detail.selectedItems)
+            }
+            selectedItems={selectedItems}
+            empty={
+              <Box textAlign="center" color="inherit">
+                <b>{t('admin:catalog.no_courses')}</b>
+                <Box padding={{ bottom: "s" }} variant="p" color="inherit">
+                  {filterValue ? 
+                    t('admin:catalog.no_matches') : 
+                    t('admin:catalog.create_first_course')}
+                </Box>
+              </Box>
+            }
+            pagination={
+              <Pagination 
+                currentPageIndex={1} 
+                pagesCount={1} 
+                ariaLabels={{
+                  nextPageLabel: t('common:next_page'),
+                  previousPageLabel: t('common:previous_page'),
+                  pageLabel: pageNumber => t('common:page_label', { pageNumber })
+                }}
+              />
+            }
+          />
+        ) : (
+          <Cards
+            loading={loading}
+            items={filteredCourses}
+            cardDefinition={cardDefinition}
+            loadingText={t('admin:catalog.loading')}
+            selectionType="multi"
+            onSelectionChange={({ detail }) => 
+              setSelectedItems(detail.selectedItems)
+            }
+            selectedItems={selectedItems}
+            empty={
+              <Box textAlign="center" color="inherit">
+                <b>{t('admin:catalog.no_courses')}</b>
+                <Box padding={{ bottom: "s" }} variant="p" color="inherit">
+                  {filterValue ? 
+                    t('admin:catalog.no_matches') : 
+                    t('admin:catalog.create_first_course')}
+                </Box>
+              </Box>
+            }
+            cardsPerRow={[
+              { cards: 1 },
+              { minWidth: 500, cards: 2 },
+              { minWidth: 992, cards: 3 }
+            ]}
+            pagination={
+              <Pagination 
+                currentPageIndex={1} 
+                pagesCount={1} 
+                ariaLabels={{
+                  nextPageLabel: t('common:next_page'),
+                  previousPageLabel: t('common:previous_page'),
+                  pageLabel: pageNumber => t('common:page_label', { pageNumber })
+                }}
+              />
+            }
+          />
+        )}
+      </SpaceBetween>
+    </AdminLayout>
+  );
+};
+
+export default CourseCatalogPage;
+src/pages/instructor/CourseSchedulePage.tsx
+import React, { useState } from 'react';
+import InstructorLayout from '../../components/layout/InstructorLayout';
+import ContentToolbar from '../../components/toolbar/ContentToolbar';
+import { 
+  Table, 
+  Box, 
+  Pagination, 
+  Header,
+  SpaceBetween,
+  Button,
+  DatePicker,
+  FormField,
+  ColumnLayout
+} from '@cloudscape-design/components';
+import { useTranslation } from 'react-i18next';
+
+// 샘플 데이터
+const sampleSchedules = [
+  { id: '1', courseName: 'AWS Fundamentals', date: '2023-06-15', startTime: '09:00', endTime: '16:00', location: 'Online' },
+  { id: '2', courseName: 'Advanced Cloud Security', date: '2023-06-18', startTime: '09:00', endTime: '17:00', location: 'Room 302' },
+  { id: '3', courseName: 'DevOps on AWS', date: '2023-06-22', startTime: '10:00', endTime: '16:30', location: 'Online' },
+];
+
+const CourseSchedulePage: React.FC = () => {
+  const { t } = useTranslation(['instructor', 'common']);
+  const [filterValue, setFilterValue] = useState('');
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  
+  // 필터링 처리
+  const filteredSchedules = filterValue 
+    ? sampleSchedules.filter(schedule => 
+        schedule.courseName.toLowerCase().includes(filterValue.toLowerCase())
+      )
+    : sampleSchedules;
+    
+  // 테이블 컬럼 정의
+  const columnDefinitions = [
+    { id: 'courseName', header: t('instructor:schedule.course_name'), cell: item => item.courseName },
+    { id: 'date', header: t('instructor:schedule.date'), cell: item => item.date },
+    { id: 'time', header: t('instructor:schedule.time'), cell: item => `\${item.startTime} - \${item.endTime}` },
+    { id: 'location', header: t('instructor:schedule.location'), cell: item => item.location },
+    { 
+      id: 'actions', 
+      header: t('instructor:actions'), 
+      cell: item => (
+        <SpaceBetween size="xs" direction="horizontal">
+          <Button iconName="calendar">
+            {t('instructor:schedule.view_details')}
+          </Button>
+        </SpaceBetween>
+      )
+    }
+  ];
+  
+  // 툴바 필터 컴포넌트
+  const toolbarContent = (
+    <SpaceBetween size="m">
+      <ColumnLayout columns={2}>
+        <FormField label={t('instructor:schedule.start_date')}>
+          <DatePicker
+            onChange={({ detail }) => console.log(detail.value)}
+            value=""
+          />
+        </FormField>
+        <FormField label={t('instructor:schedule.end_date')}>
+          <DatePicker
+            onChange={({ detail }) => console.log(detail.value)}
+            value=""
+          />
+        </FormField>
+      </ColumnLayout>
+    </SpaceBetween>
+  );
+  
+  const breadcrumbItems = [
+    { text: t('instructor:schedule.title'), href: '/instructor/schedule' }
+  ];
+  
+  return (
+    <InstructorLayout
+      activeHref="/instructor/calendar"
+      breadcrumbItems={breadcrumbItems}
+      tools={
+        <ContentToolbar
+          filterValue={filterValue}
+          onFilterChange={setFilterValue}
+          onRefresh={() => console.log('Refreshing data...')}
+          showViewSelector={false}
+          helpPanelContent={toolbarContent}
+        />
+      }
+    >
+      <SpaceBetween size="l">
+        <Header
+          variant="h1"
+          actions={
+            <Button variant="primary" iconName="add-plus">
+              {t('instructor:schedule.add_schedule')}
+            </Button>
+          }
+        >
+          {t('instructor:schedule.title')}
+        </Header>
+        
+        <Table
+          items={filteredSchedules}
+          columnDefinitions={columnDefinitions}
+          selectionType="single"
+          onSelectionChange={({ detail }) => 
+            setSelectedItems(detail.selectedItems)
+          }
+          selectedItems={selectedItems}
+          empty={
+            <Box textAlign="center" color="inherit">
+              <b>{t('instructor:schedule.no_schedules')}</b>
+              <Box padding={{ bottom: "s" }} variant="p" color="inherit">
+                {filterValue ? 
+                  t('instructor:schedule.no_matches') : 
+                  t('instructor:schedule.create_first_schedule')}
+              </Box>
+            </Box>
+          }
+          pagination={
+            <Pagination 
+              currentPageIndex={1} 
+              pagesCount={1} 
+              ariaLabels={{
+                nextPageLabel: t('common:next_page'),
+                previousPageLabel: t('common:previous_page'),
+                pageLabel: pageNumber => t('common:page_label', { pageNumber })
+              }}
+            />
+          }
+        />
+      </SpaceBetween>
+    </InstructorLayout>
+  );
+};
+
+export default CourseSchedulePage;
+src/pages/public/CoursesPage.tsx
+import React, { useState } from 'react';
+import PublicLayout from '../../components/layout/PublicLayout';
+import { 
+  Cards, 
+  Box, 
+  Pagination, 
+  Header,
+  SpaceBetween,
+  Button,
+  Container,
+  TextFilter,
+  Grid,
+  Select
+} from '@cloudscape-design/components';
+import { useTranslation } from 'react-i18next';
+
+// 샘플 데이터
+const sampleCourses = [
+  { 
+    id: '1', 
+    title: 'AWS Fundamentals', 
+    level: 'Beginner', 
+    duration: '8 hours', 
+    description: 'An introductory course to Amazon Web Services.',
+    image: '/assets/aws-fundamentals.jpg',
+  },
+  { 
+    id: '2', 
+    title: 'Advanced Cloud Security', 
+    level: 'Advanced', 
+    duration: '16 hours', 
+    description: 'Learn advanced security practices for AWS cloud environments.',
+    image: '/assets/cloud-security.jpg',
+  },
+  { 
+    id: '3', 
+    title: 'DevOps on AWS', 
+    level: 'Intermediate', 
+    duration: '12 hours', 
+    description: 'Implement DevOps methodologies with AWS tools.',
+    image: '/assets/devops-aws.jpg',
+  },
+];
+
+const CoursesPage: React.FC = () => {
+  const { t } = useTranslation(['public', 'common']);
+  const [filterValue, setFilterValue] = useState('');
+  const [levelFilter, setLevelFilter] = useState({ label: t('public:courses.all_levels'), value: 'all' });
+  
+  // 필터링 처리
+  const filteredCourses = sampleCourses.filter(course => {
+    const textMatch = !filterValue || 
+      course.title.toLowerCase().includes(filterValue.toLowerCase()) ||
+      course.description.toLowerCase().includes(filterValue.toLowerCase());
+    
+    const levelMatch = levelFilter.value === 'all' || 
+      course.level.toLowerCase() === levelFilter.value;
+      
+    return textMatch && levelMatch;
+  });
+    
+  // 카드 정의
+  const cardDefinition = {
+    header: item => <h3>{item.title}</h3>,
+    sections: [
+      {
+        id: "image",
+        content: item => item.image && (
+          <img 
+            src={item.image} 
+            alt={item.title}
+            style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+          />
+        )
+      },
+      {
+        id: "details",
+        content: item => (
+          <SpaceBetween size="s">
+            <div><strong>{t('public:courses.level')}:</strong> {item.level}</div>
+            <div><strong>{t('public:courses.duration')}:</strong> {item.duration}</div>
+            <p>{item.description}</p>
+            <Button variant="primary">{t('public:courses.view_details')}</Button>
+          </SpaceBetween>
+        )
+      }
+    ]
+  };
+  
+  const levelOptions = [
+    { label: t('public:courses.all_levels'), value: 'all' },
+    { label: t('public:courses.beginner'), value: 'beginner' },
+    { label: t('public:courses.intermediate'), value: 'intermediate' },
+    { label: t('public:courses.advanced'), value: 'advanced' }
+  ];
+  
+  const breadcrumbItems = [
+    { text: t('public:courses.title'), href: '/courses' }
+  ];
+  
+  return (
+    <PublicLayout
+      activeHref="/courses"
+      breadcrumbItems={breadcrumbItems}
+      hideSidebar={true}
+    >
+      <SpaceBetween size="l">
+        <Header variant="h1">
+          {t('public:courses.title')}
+        </Header>
+        
+        <Container>
+          <Grid gridDefinition={[{ colspan: { default: 12, xs: 12, s: 8 } }, { colspan: { default: 12, xs: 12, s: 4 } }]}>
+            <TextFilter
+              filteringText={filterValue}
+              filteringPlaceholder={t('public:courses.search_placeholder')}
+              filteringAriaLabel={t('common:search_aria_label')}
+              onChange={({ detail }) => setFilterValue(detail.filteringText)}
+            />
+            <Select
+              selectedOption={levelFilter}
+              onChange={({ detail }) => setLevelFilter(detail.selectedOption)}
+              options={levelOptions}
+            />
+          </Grid>
+        </Container>
+        
+        <Cards
+          items={filteredCourses}
+          cardDefinition={cardDefinition}
+          loadingText={t('public:courses.loading')}
+          empty={
+            <Box textAlign="center" color="inherit">
+              <b>{t('public:courses.no_courses')}</b>
+              <Box padding={{ bottom: "s" }} variant="p" color="inherit">
+                {t('public:courses.try_different_filters')}
+              </Box>
+            </Box>
+          }
+          cardsPerRow={[
+            { cards: 1 },
+            { minWidth: 500, cards: 2 },
+            { minWidth: 992, cards: 3 }
+          ]}
+          pagination={
+            <Pagination 
+              currentPageIndex={1} 
+              pagesCount={1} 
+              ariaLabels={{
+                nextPageLabel: t('common:next_page'),
+                previousPageLabel: t('common:previous_page'),
+                pageLabel: pageNumber => t('common:page_label', { pageNumber })
+              }}
+            />
+          }
+        />
+      </SpaceBetween>
+    </PublicLayout>
+  );
+};
+
+export default CoursesPage;
+5. App.tsx 및 라우팅
+src/App.tsx
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Amplify } from 'aws-amplify';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
+import amplifyConfig from './amplifyConfig';
+import { ThemeProvider } from './context/ThemeContext';
+import { LocaleProvider } from './context/LocaleContext';
+import { AuthProvider } from './context/AuthContext';
+
+// 관리자 페이지
+import CourseCatalogPage from './pages/admin/CourseCatalogPage';
+import AdminDashboardPage from './pages/admin/DashboardPage';
+import AdminSettingsPage from './pages/admin/SettingsPage';
+
+// 강사 페이지
+import InstructorDashboardPage from './pages/instructor/DashboardPage';
+import CourseSchedulePage from './pages/instructor/CourseSchedulePage';
+
+// 퍼블릭 페이지
+import HomePage from './pages/public/HomePage';
+import CoursesPage from './pages/public/CoursesPage';
+import AboutPage from './pages/public/AboutPage';
+import ContactPage from './pages/public/ContactPage';
+
+// 인증 페이지
+import LoginPage from './pages/auth/LoginPage';
+import RegisterPage from './pages/auth/RegisterPage';
+
+// 기타 페이지
+import NotFoundPage from './pages/NotFoundPage';
+
+// Amplify 설정
+Amplify.configure(amplifyConfig);
+
+const App: React.FC = () => {
+  return (
+    <I18nextProvider i18n={i18n}>
+      <ThemeProvider>
+        <LocaleProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* 퍼블릭 라우트 */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/courses" element={<CoursesPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                
+                {/* 인증 라우트 */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                
+                {/* 관리자 라우트 */}
+                <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+                <Route path="/admin/catalog" element={<CourseCatalogPage />} />
+                <Route path="/admin/settings" element={<AdminSettingsPage />} />
+                
+                {/* 강사 라우트 */}
+                <Route path="/instructor" element={<Navigate to="/instructor/dashboard" replace />} />
+                <Route path="/instructor/dashboard" element={<InstructorDashboardPage />} />
+                <Route path="/instructor/calendar" element={<CourseSchedulePage />} />
+                
+                {/* 404 페이지 */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
+        </LocaleProvider>
+      </ThemeProvider>
+    </I18nextProvider>
+  );
+};
+
+export default App;
+6. 훅 및 컨텍스트 예시
+src/hooks/useTheme.ts
+import { useContext } from 'react';
+import { ThemeContext } from '../context/ThemeContext';
+
+export const useTheme = () => useContext(ThemeContext);
+src/context/ThemeContext.tsx
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
+
+type Theme = 'light' | 'dark';
+
+interface ThemeContextType {
+  theme: Theme;
+  toggleTheme: () => void;
+}
+
+export const ThemeContext = createContext<ThemeContextType>({
+  theme: 'light',
+  toggleTheme: () => {},
+});
+
+export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return (savedTheme as Theme) || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    
+    // CloudScape 테마에 맞게 body 클래스 추가
+    if (theme === 'dark') {
+      document.body.classList.add('awsui-dark-mode');
+      document.body.classList.remove('awsui-light-mode');
+    } else {
+      document.body.classList.add('awsui-light-mode');
+      document.body.classList.remove('awsui-dark-mode');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(currentTheme => (currentTheme === 'light' ? 'dark' : 'light'));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
